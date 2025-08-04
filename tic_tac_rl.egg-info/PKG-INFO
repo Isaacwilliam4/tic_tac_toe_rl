@@ -1,0 +1,14 @@
+Metadata-Version: 2.4
+Name: tic_tac_rl
+Version: 0.1.0
+Summary: Reinforcement learning experiments on Tic Tac Toe from Button and Sutton (2020)
+Author: Isaac Peterson
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Requires-Python: >=3.8
+Requires-Dist: numpy
+Dynamic: author
+Dynamic: classifier
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
