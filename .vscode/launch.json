@@ -4,12 +4,20 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        {
+            "name": "value iteration",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tic_tac_rl.dp.value_iteration",
+            // "args": ["policy_theta_00001.npz", "0.00001"],
+            "args": ["vi_policy_results.npz", "0.0001"],
+        },
 
         {
             "name": "policy iteration",
             "type": "debugpy",
             "request": "launch",
-            "module": "tic_tac_rl.dp.policy_iter",
+            "module": "tic_tac_rl.dp.policy_iteration",
             // "args": ["policy_theta_00001.npz", "0.00001"],
             "args": ["policy_results.npz", "0.0001"],
         },
@@ -25,7 +33,8 @@
             "type": "debugpy",
             "request": "launch",
             "module": "examples.test_policy_vs_random",
-            "args": ["policy_results.npz", "10_000", "--debug", ">", "output.log"],
+            "args": ["vi_policy_results.npz", "10_000"],
+            // "args": ["policy_results.npz", "10_000", "--debug", ">", "output.log"],
             "redirectOutput": true
             // "args": ["policy_theta_01.npz", "1000"],
         }
