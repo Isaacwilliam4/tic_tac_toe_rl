@@ -3,53 +3,79 @@ import random
 from tic_tac_rl.env import TicTacToe
 import argparse
 
-args = argparse.ArgumentParser(description="Evaluate a policy against random play in Tic Tac Toe.")
-args.add_argument('npz_path', type=str, default='policy_results.npz', help='Path to the .npz file containing the policy.')
-args.add_argument('num_games', type=int, default=1000, help='Number of games to play for evaluation.')
+parser = argparse.ArgumentParser(description="Evaluate a policy against random play in Tic Tac Toe.")
+parser.add_argument('npz_path', type=str, default='policy_results.npz', help='Path to the .npz file containing the policy.')
+parser.add_argument('num_games', type=int, default=1000, help='Number of games to play for evaluation.')
+parser.add_argument('--debug', action='store_true', help='debug mode')
+args = parser.parse_args()
+
 
 def load_policy(npz_path):
     data = np.load(npz_path, allow_pickle=True)
-    return data['policy'][()]  # stored as a dict
+    return data['policy'][()], data['value_function'][()]  # both stored as dicts
+
 
 def random_policy(env):
     return random.choice(env.get_available_actions())
 
-def play_game(policy, env):
-    state, _ = env.reset()
+
+def get_state_key(env):
+    """Return the state key including current player, matching training format."""
+    return tuple(env.board.reshape(-1)) + (env.current_player,)
+
+
+def play_game(policy, env, value, debug=False):
+    env.reset()
+    policy_player = random.choice([1, -1])  # Randomly choose if policy goes first or second
+    env.current_player = 1  # Always start with X as per game rules
+    if debug:
+        print("Game Start:")
+        print(f'Policy plays as: {"X" if policy_player == 1 else "O"}\n')
+
     while True:
-        if env.get_current_player() == 1:
-            # Trained policy plays
-            action = policy.get(state)
+        if env.get_current_player() == policy_player:
+            # Policy move
+            state_key = get_state_key(env)
+            action = policy.get(state_key)
             if action not in env.get_available_actions():
-                # Fallback to random if illegal (shouldn't happen)
-                action = random_policy(env)
+                action = random_policy(env)  # Fallback
         else:
-            # Random player
+            # Random move
             action = random_policy(env)
 
-        state, reward, done = env.play(action)
+        env.play(action)
+        if debug:
+            state_key = get_state_key(env)
+            print(f"Value of state: {value.get(state_key, 0.0)}")
+            env.print_board()
+            print()
 
-        if done:
+        if env.is_terminal():
             winner = env.check_winner()
-            return winner  # 1 = policy wins, -1 = random wins, None = draw
+            if winner is None:
+                return None  # Draw
+            return winner == policy_player  # True if policy wins, False if loses
 
-def evaluate_policy_vs_random(npz_path, num_games=1000):
-    policy = load_policy(npz_path)
+
+def evaluate_policy_vs_random(npz_path, num_games=1000, debug=False):
+    policy, value = load_policy(npz_path)
     env = TicTacToe()
 
-    results = {1: 0, -1: 0, 0: 0}  # policy wins, random wins, draws
+    results = {1: 0, -1: 0, 0: 0}  # wins, losses, draws
     for _ in range(num_games):
-        winner = play_game(policy, env)
-        if winner is None:
+        result = play_game(policy, env, value, debug)
+        if result is None:
             results[0] += 1
+        elif result:
+            results[1] += 1
         else:
-            results[winner] += 1
+            results[-1] += 1
 
     print(f"Out of {num_games} games:")
     print(f"Policy wins:  {results[1]}")
     print(f"Random wins:  {results[-1]}")
     print(f"Draws:        {results[0]}")
 
+
 if __name__ == "__main__":
-    args = args.parse_args()
-    evaluate_policy_vs_random(args.npz_path, args.num_games)
+    evaluate_policy_vs_random(args.npz_path, args.num_games, args.debug)

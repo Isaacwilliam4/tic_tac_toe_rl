@@ -62,3 +62,10 @@ class TicTacToe:
         done = self.is_terminal()
         self.current_player *= -1
         return self.get_state(), reward, done
+    
+    def print_board(self):
+        symbols = {1: 'X', -1: 'O', 0: ' '}
+        for row in self.board:
+            print(" | ".join(symbols[x] for x in row))
+            print("-" * 9)
+        print()

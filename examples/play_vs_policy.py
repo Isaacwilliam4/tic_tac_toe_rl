@@ -22,10 +22,8 @@ def get_human_action(env):
     actions = env.get_available_actions()
     while True:
         try:
-            pos = input("Enter your move as row,col (1–3): ")
+            pos = input("Enter your move as row,col (0–2): ")
             i, j = map(int, pos.strip().split(","))
-            i -= 1
-            j -= 1
             if (i, j) in actions:
                 return (i, j)
             else:

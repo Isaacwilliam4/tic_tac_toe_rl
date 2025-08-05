@@ -9,7 +9,9 @@
             "name": "policy iteration",
             "type": "debugpy",
             "request": "launch",
-            "module": "tic_tac_rl.dp.policy_iter"
+            "module": "tic_tac_rl.dp.policy_iter",
+            // "args": ["policy_theta_00001.npz", "0.00001"],
+            "args": ["policy_results.npz", "0.0001"],
         },
         {
             "name": "play against policy",
@@ -17,6 +19,15 @@
             "request": "launch",
             "module": "examples.play_vs_policy",
             "args": ["policy_results.npz"]
+        },
+        {
+            "name": "policy play random",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "examples.test_policy_vs_random",
+            "args": ["policy_results.npz", "10_000", "--debug", ">", "output.log"],
+            "redirectOutput": true
+            // "args": ["policy_theta_01.npz", "1000"],
         }
     ]
 }
