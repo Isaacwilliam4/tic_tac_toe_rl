@@ -3,6 +3,7 @@ from typing import Dict, Tuple
 from tic_tac_rl.env import TicTacToe
 import argparse
 import random
+from tqdm import tqdm
 
 parser = argparse.ArgumentParser(description="Policy Iteration for Tic Tac Toe.")
 parser.add_argument('npz_path', type=str, default='policy_results.npz', help='Path to save the policy and value function.')
@@ -41,7 +42,8 @@ def get_initial_states_policy_vf(env: TicTacToe):
 def value_iteration(env: TicTacToe, V, policy, states, theta=1e-4, gamma=0.99):
     while True:
         delta = 0.0
-        for state in states:
+        pbar = tqdm(states)
+        for state in pbar:
             board = np.array(state[:-1]).reshape(3, 3)
             player = state[-1]
             env.board = board
@@ -79,6 +81,7 @@ def value_iteration(env: TicTacToe, V, policy, states, theta=1e-4, gamma=0.99):
 
             V[state] = best_value
             delta = max(delta, abs(best_value - old_v))
+            pbar.set_postfix_str(f"delta={delta}/{theta}")
 
         if delta < theta:
             break
