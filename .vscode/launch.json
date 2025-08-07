@@ -33,9 +33,29 @@
             "type": "debugpy",
             "request": "launch",
             "module": "examples.test_policy_vs_random",
-            "args": ["vi_policy_results.npz", "10_000"],
-            // "args": ["policy_results.npz", "10_000", "--debug", ">", "output.log"],
+            // "args": ["vi_policy_results.npz", "10_000"],
+            "args": ["policy_results.npz", "10_000", "--debug", ">", "output.log"],
             "redirectOutput": true
+            // "args": ["policy_theta_01.npz", "1000"],
+        },
+        {
+            "name": "play blackjack mc exploring starts",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tic_tac_rl.mc.scripts.play_black_jack",
+            // "args": ["vi_policy_results.npz", "10_000"],
+            // "args": ["policy_results.npz", "10_000", "--debug", ">", "output.log"],
+            // "redirectOutput": true
+            // "args": ["policy_theta_01.npz", "1000"],
+        },
+        {
+            "name": "monte carlo exploring starts",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tic_tac_rl.mc.monte_carlo_es",
+            // "args": ["vi_policy_results.npz", "10_000"],
+            // "args": ["policy_results.npz", "10_000", "--debug", ">", "output.log"],
+            // "redirectOutput": true
             // "args": ["policy_theta_01.npz", "1000"],
         }
     ]

@@ -1,6 +1,6 @@
 import numpy as np
 import random
-from tic_tac_rl.env import TicTacToe
+from tic_tac_rl.dp.tic_tac_toe_env import TicTacToe
 import argparse
 
 parser = argparse.ArgumentParser(description="Evaluate a policy against random play in Tic Tac Toe.")

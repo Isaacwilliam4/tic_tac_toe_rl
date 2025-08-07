@@ -1,42 +1,12 @@
 import numpy as np
-from typing import Dict, Tuple
-from tic_tac_rl.env import TicTacToe
+from tic_tac_rl.dp.tic_tac_toe_env import TicTacToe
 import argparse
-import random
+from .utils import get_initial_states_policy_vf
 
 parser = argparse.ArgumentParser(description="Policy Iteration for Tic Tac Toe.")
 parser.add_argument('npz_path', type=str, default='policy_results.npz', help='Path to save the policy and value function.')
 parser.add_argument('theta', type=float, default=1e-4, help='Convergence threshold for value function updates.')
 args = parser.parse_args()
-
-def get_initial_states_policy_vf(env: TicTacToe):
-    visited = set()
-    policy = {}
-    vf = {}
-
-    def dfs(state_board, player):
-        env.board = np.array(state_board).reshape(3, 3)
-        env.current_player = player
-        s = tuple(state_board) + (player,)
-        if s in visited:
-            return
-        visited.add(s)
-        if env.is_terminal():
-            vf[s] = 0.0
-            policy[s] = None
-            return
-
-        actions = env.get_available_actions()
-        policy[s] = random.choice(actions)
-        vf[s] = 0.0
-        for action in actions:
-            env.board[action] = player
-            next_board = env.get_state()
-            dfs(next_board, -player)
-            env.board[action] = 0
-
-    dfs(env.get_state(), env.current_player)
-    return visited, policy, vf
 
 def evaluate_policy(env, V, policy, states, theta=1e-4, gamma=0.99):
     while True:

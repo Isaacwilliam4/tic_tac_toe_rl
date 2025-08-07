@@ -1,5 +1,5 @@
 import numpy as np
-from tic_tac_rl.env import TicTacToe
+from tic_tac_rl.dp.tic_tac_toe_env import TicTacToe
 import argparse
 
 parser = argparse.ArgumentParser(description="Play Tic Tac Toe against a trained policy.")
@@ -56,7 +56,7 @@ def play_vs_policy(policy, human_player=1):
             action = policy.get(key)
             if action not in env.get_available_actions():
                 action = env.get_available_actions()[0]
-            print(f"Policy plays: {action[0]+1},{action[1]+1}")
+            print(f"Policy plays: {action[0]},{action[1]}")
 
         state, reward, done = env.play(action)
         print_board(state)

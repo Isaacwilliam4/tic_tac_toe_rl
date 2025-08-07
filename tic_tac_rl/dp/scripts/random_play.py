@@ -1,5 +1,5 @@
 import random
-from tic_tac_rl.env import TicTacToe
+from tic_tac_rl.dp.tic_tac_toe_env import TicTacToe
 
 def random_policy(actions):
     return random.choice(actions)
